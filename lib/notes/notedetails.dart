@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:flutternotepad/model/Note.dart';
+import 'package:flutternotepad/database/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
 
 
 //my files
@@ -6,17 +10,19 @@ import 'package:flutternotepad/notes/noteslist.dart';
 
 class NoteDetails extends StatefulWidget {
   String appbar;
-  NoteDetails(this.appbar);
+  Note note;
+  NoteDetails(this.note,this.appbar);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return NoteDetailsState(appbar);
+    return NoteDetailsState(note,appbar);
   }
 }
 
 class NoteDetailsState extends State<NoteDetails> {
   String appbar;
-  NoteDetailsState(this.appbar);
+  Note note;
+  NoteDetailsState(this.note,this.appbar);
 
   static var _priporities = ['Height', 'Low'];
   TextEditingController titleController = TextEditingController();
