@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 
+
+//my files
+import 'package:flutternotepad/notes/noteslist.dart';
+
 class NoteDetails extends StatefulWidget {
+  String appbar;
+  NoteDetails(this.appbar);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return NoteDetailsState();
+    return NoteDetailsState(appbar);
   }
 }
 
 class NoteDetailsState extends State<NoteDetails> {
+  String appbar;
+  NoteDetailsState(this.appbar);
+
   static var _priporities = ['Height', 'Low'];
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -19,8 +28,10 @@ class NoteDetailsState extends State<NoteDetails> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text('Note Detail'),
-          leading: Icon(Icons.arrow_back),
+          title: Text(appbar),
+          leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: (){
+            moveback();
+          },)
         ),
         body: Padding(
           padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
@@ -116,5 +127,8 @@ class NoteDetailsState extends State<NoteDetails> {
             ],
           ),
         ));
+  }
+  void moveback(){
+    Navigator.pop(context);
   }
 }

@@ -21,7 +21,7 @@ class NoteListState extends State<NoteList> {
       body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          NoteDetails();
+          navigate('Add Note');
         },
         tooltip: 'Add Note',
         child: Icon(Icons.add),
@@ -51,10 +51,17 @@ class NoteListState extends State<NoteList> {
             ),
             onTap: () {
               debugPrint("List item clicked");
+              navigate('Edit Note');
             },
           ),
         );
       },
     );
+  }
+
+  void navigate(String t) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return NoteDetails(t);
+    }));
   }
 }
