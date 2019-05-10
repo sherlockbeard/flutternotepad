@@ -114,10 +114,13 @@ class NoteListState extends State<NoteList> {
     updateListView();
   }
 
-  void navigate(Note note, String t) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
+  void navigate(Note note, String t) async{
+    bool result= await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return NoteDetails(note, t);
     }));
+    if(result==true){
+      updateListView();
+    }
   }
 
   void updateListView() {
