@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutternotepad/appbar/Theme.dart' as prefix0;
 import 'dart:async';
 import 'package:flutternotepad/model/Note.dart';
 import 'package:flutternotepad/database/database_helper.dart';
@@ -6,6 +7,8 @@ import 'package:sqflite/sqflite.dart';
 
 //my files
 import 'package:flutternotepad/notes/notedetails.dart';
+import 'package:flutternotepad/appbar/Theme.dart';
+import 'package:flutternotepad/appbar/value.dart';
 
 class NoteList extends StatefulWidget {
   @override
@@ -27,11 +30,28 @@ class NoteListState extends State<NoteList> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+              onSelected: choice,
+              itemBuilder: (BuildContext context) {
+                return value.choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              })
+        ],
       ),
       body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          navigate(Note('', '', ), 'Add Note');
+          navigate(
+              Note(
+                '',
+                '',
+              ),
+              'Add Note');
         },
         tooltip: 'Add Note',
         child: Icon(Icons.add),
@@ -83,11 +103,12 @@ class NoteListState extends State<NoteList> {
     updateListView();
   }
 
-  void navigate(Note note, String t) async{
-    bool result= await Navigator.push(context, MaterialPageRoute(builder: (context) {
+  void navigate(Note note, String t) async {
+    bool result =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return NoteDetails(note, t);
     }));
-    if(result==true){
+    if (result == true) {
       updateListView();
     }
   }
@@ -103,5 +124,13 @@ class NoteListState extends State<NoteList> {
         });
       });
     });
+  }
+
+  void choice(String choice) {
+    switch (choice) {
+      case "Theme":
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => prefix0.Themeapp()));
+    }
   }
 }

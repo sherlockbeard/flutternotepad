@@ -19,6 +19,7 @@ class NoteDetails extends StatefulWidget {
 }
 
 class NoteDetailsState extends State<NoteDetails> {
+  var _formKey = GlobalKey<FormState>();
   DatabaseHelper helper = DatabaseHelper();
   String appbar;
   Note note;
@@ -42,136 +43,143 @@ class NoteDetailsState extends State<NoteDetails> {
                 moveback();
               },
             )),
-        body: Padding(
-          padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-          child: ListView(
-            children: <Widget>[
-              
-              Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: TextField(
-                  controller: titleController,
-                  style: textStyle,
-                  onChanged: (val) {
-                    debugPrint('Text cahnged');
-                    updateTitle();
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Title',
-                      labelStyle: textStyle,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: TextField(
-                  controller: descriptionController,
-                  style: textStyle,
-                  onChanged: (val) {
-                    debugPrint('Text cahnged');
-                    updateDes();
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'description',
-                      labelStyle: textStyle,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15, bottom: 15),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: RaisedButton(
-                        color: Theme.of(context).primaryColorDark,
-                        textColor: Theme.of(context).primaryColorLight,
-                        child: Text(
-                          'Save',
-                          textScaleFactor: 1.5,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            debugPrint("Save button clicked");
-                            _save();
-                          });
-                        },
-                      ),
+        body: Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+              child: ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    child: TextFormField(
+                      controller: titleController,
+                      style: textStyle,
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return "Enter something plz";
+                        }
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'Title',
+                          labelStyle: textStyle,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
                     ),
-                    Container(
-                      width: 5.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    child: TextField(
+                      controller: descriptionController,
+                      style: textStyle,
+                      onChanged: (val) {
+                        debugPrint('Text cahnged');
+                        updateDes();
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'description',
+                          labelStyle: textStyle,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
                     ),
-                    Expanded(
-                      child: RaisedButton(
-                        color: Theme.of(context).primaryColorDark,
-                        textColor: Theme.of(context).primaryColorLight,
-                        child: Text(
-                          'Delete',
-                          textScaleFactor: 1.5,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15, bottom: 15),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: RaisedButton(
+                            color: Theme.of(context).primaryColorDark,
+                            textColor: Theme.of(context).primaryColorLight,
+                            child: Text(
+                              'Save',
+                              textScaleFactor: 1.5,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (_formKey.currentState.validate()) {
+                                  debugPrint("Save button clicked");
+                                  _save();
+                                  updateTitle();
+                                  updateDes();
+                                }
+                              });
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            debugPrint("Delete button clicked");
-                            _delete();
-                          });
-                        },
-                      ),
-                    )
-                  ],
-                ),
+                        Container(
+                          width: 5.0,
+                        ),
+                        Expanded(
+                          child: RaisedButton(
+                            color: Theme.of(context).primaryColorDark,
+                            textColor: Theme.of(context).primaryColorLight,
+                            child: Text(
+                              'Delete',
+                              textScaleFactor: 1.5,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                debugPrint("Delete button clicked");
+                                _delete();
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            )));
   }
 
   void moveback() {
-    Navigator.pop(context,true);
+    Navigator.pop(context, true);
   }
 
-  
-
-  void updateTitle(){
+  void updateTitle() {
     note.title = titleController.text;
   }
 
-  void updateDes(){
-    note.description= descriptionController.text;
+  void updateDes() {
+    note.description = descriptionController.text;
   }
 
-  void _save() async{
+  void _save() async {
     moveback();
     int result;
-    note.date=DateFormat.yMMMd().format(DateTime.now());
-    if(note.id!=null){
+    note.date = DateFormat.yMMMd().format(DateTime.now());
+    if (note.id != null) {
       result = await helper.updateNote(note);
-    }else{
+    } else {
       result = await helper.insertNote(note);
     }
-    if(result!=0){
-      _showAlert('Status','Note Saved Sucessfully');
-    }else{
-      _showAlert('Status','Problem Saving it');
+    if (result != 0) {
+      _showAlert('Status', 'Note Saved Sucessfully');
+    } else {
+      _showAlert('Status', 'Problem Saving it');
     }
   }
 
-
-  void _delete() async{
+  void _delete() async {
     moveback();
-    if(note.id==null){
+    if (note.id == null) {
       _showAlert('Status', 'No Note To Delete');
       return;
     }
     int result = await helper.deleteNote(note.id);
-    if(result!=0){
+    if (result != 0) {
       _showAlert('Status', 'Note Deleted Successfully');
-    }else{
+    } else {
       _showAlert('Status', 'Error Occured while deleting it');
     }
   }
-  void _showAlert(String title,String message){
-    AlertDialog alertDialog = AlertDialog(title: Text(title),content: Text(message),);
-    showDialog(context: context,builder: (_) => alertDialog);
+
+  void _showAlert(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
   }
 }
