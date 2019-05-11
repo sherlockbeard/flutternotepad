@@ -39,14 +39,13 @@ class DatabaseHelper {
   }
 
   void _createDb(Database db, int newVersion) async {
-    await db.execute(
-        'CREATE TABLE $noteTable($colId PRIMARY KEY AUTOINCREMENT,$colTitle TEXT,'
-        '$colDescription TEXT,$colPriority TEXT,$colDate TEXT');
+    await db.execute('CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
+        '$colDescription TEXT, $colDate TEXT)');
   }
 
   Future<List<Map<String, dynamic>>> getNoteMapList() async {
     Database db = await this.database;
-    var result = await db.query(noteTable, orderBy: '$colPriority ASC');
+    var result = await db.query(noteTable, orderBy: '$colDate ASC');
     return result;
   }
 

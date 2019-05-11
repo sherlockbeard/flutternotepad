@@ -31,7 +31,7 @@ class NoteListState extends State<NoteList> {
       body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          navigate(Note('', '', 2), 'Add Note');
+          navigate(Note('', '', ), 'Add Note');
         },
         tooltip: 'Add Note',
         child: Icon(Icons.add),
@@ -49,10 +49,6 @@ class NoteListState extends State<NoteList> {
           color: Colors.white,
           elevation: 3.0,
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: getPriorityColor(this.noteList[pos].priority),
-              child: getPriorityIcon(this.noteList[pos].priority),
-            ),
             title: Text(this.noteList[pos].title, style: titleStyle),
             subtitle: Text(this.noteList[pos].date),
             trailing: GestureDetector(
@@ -72,33 +68,6 @@ class NoteListState extends State<NoteList> {
         );
       },
     );
-  }
-
-  Color getPriorityColor(int priority) {
-    switch (priority) {
-      case 1:
-        return Colors.red;
-        break;
-      case 2:
-        return Colors.yellow;
-        break;
-
-      default:
-        return Colors.yellow;
-    }
-  }
-
-  Icon getPriorityIcon(int priority) {
-    switch (priority) {
-      case 1:
-        return Icon(Icons.play_arrow);
-        break;
-      case 2:
-        return Icon(Icons.keyboard_arrow_right);
-        break;
-      default:
-        return Icon(Icons.keyboard_arrow_right);
-    }
   }
 
   void _deletenotes(context, Note note) async {
@@ -130,7 +99,7 @@ class NoteListState extends State<NoteList> {
       noteListFuture.then((noteList) {
         setState(() {
           this.noteList = noteList;
-          this.count = count;
+          this.count = noteList.length;
         });
       });
     });

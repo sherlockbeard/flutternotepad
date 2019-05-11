@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:flutternotepad/model/Note.dart';
 import 'package:flutternotepad/database/database_helper.dart';
 import 'package:intl/intl.dart';
@@ -25,8 +24,6 @@ class NoteDetailsState extends State<NoteDetails> {
   Note note;
 
   NoteDetailsState(this.note, this.appbar);
-
-  static var _priporities = ['Height', 'Low'];
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
@@ -49,24 +46,7 @@ class NoteDetailsState extends State<NoteDetails> {
           padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
           child: ListView(
             children: <Widget>[
-              ListTile(
-                title: DropdownButton(
-                  items: _priporities.map((String item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-                  style: textStyle,
-                  value: getPriorityAsString(note.priority),
-                  onChanged: (val) {
-                    setState(() {
-                      debugPrint("User value $val");
-                      updatePriorityAsInt(val);
-                    });
-                  },
-                ),
-              ),
+              
               Padding(
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
@@ -150,29 +130,7 @@ class NoteDetailsState extends State<NoteDetails> {
     Navigator.pop(context,true);
   }
 
-  void updatePriorityAsInt(String value) {
-    switch (value) {
-      case 'High':
-        note.priority = 1;
-        break;
-      case 'Low':
-        note.priority = 2;
-        break;
-    }
-  }
-
-  String getPriorityAsString(int val) {
-    String priority;
-    switch (val) {
-      case 1:
-        priority = _priporities[0];
-        break;
-      case 2:
-        priority = _priporities[1];
-        break;
-    }
-    return priority;
-  }
+  
 
   void updateTitle(){
     note.title = titleController.text;
