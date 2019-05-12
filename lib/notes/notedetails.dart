@@ -25,14 +25,12 @@ class NoteDetailsState extends State<NoteDetails> {
   Note note;
 
   NoteDetailsState(this.note, this.appbar);
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  final titleController = new TextEditingController();
+  final descriptionController =new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
-    titleController.text = note.title;
-    descriptionController.text = note.description;
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
@@ -71,12 +69,13 @@ class NoteDetailsState extends State<NoteDetails> {
                     child: TextField(
                       controller: descriptionController,
                       style: textStyle,
+                      maxLines: 10,
                       onChanged: (val) {
                         debugPrint('Text cahnged');
                         updateDes();
                       },
                       decoration: InputDecoration(
-                          labelText: 'description',
+                          labelText: 'Description',
                           labelStyle: textStyle,
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0))),
@@ -143,6 +142,7 @@ class NoteDetailsState extends State<NoteDetails> {
 
   void updateDes() {
     note.description = descriptionController.text;
+    updateTitle();
   }
 
   void _save() async {
@@ -181,5 +181,12 @@ class NoteDetailsState extends State<NoteDetails> {
       content: Text(message),
     );
     showDialog(context: context, builder: (_) => alertDialog);
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    titleController.text = note.title;
+    descriptionController.text = note.description;
   }
 }

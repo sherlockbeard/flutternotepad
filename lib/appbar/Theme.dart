@@ -22,7 +22,7 @@ class _themeappState extends State<Themeapp> {
           color: Theme.of(context).primaryColorDark,
           textColor: Theme.of(context).primaryColorLight,
           child: Text(
-            'Save',
+            'Theme change coming soon',
             textScaleFactor: 1.5,
           ),
           onPressed: () {
